@@ -25,11 +25,10 @@ function renderNav (data, hash) {
     //render nav tabs using keys from data (ie. Products and Companies)
     let navTabs = Object.entries(data).map(entry => {
         [tabName, tabList] = entry
-
         return `
             <li class="nav-item">
                 <a class="nav-link ${hash === tabName ? 'active' : ''}" href="#${tabName}">${tabName} (${tabList.length})</a>
-            </li>`
+            </li>`                                 // ^ ternary operator makes tab active if it matchs the hash
 
     }).join('')
 
