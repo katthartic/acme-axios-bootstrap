@@ -10,7 +10,7 @@ let hash = window.location.hash.slice(1)
 
 function render() {
     dataPromise.then(result => {
-        
+
         if (!(hash in result)) {
             window.location.hash = '#Products' //default hash
         }
@@ -26,8 +26,8 @@ function renderNav (data, hash) {
         [tabName, tabList] = entry
 
         return `
-            <li class="nav-item ${hash === tabName ? 'active' : ''}">
-                <a class="nav-link" href="#${tabName}">${tabName} (${tabList.length})</a>
+            <li class="nav-item">
+                <a class="nav-link ${hash === tabName ? 'active' : ''}" href="#${tabName}">${tabName} (${tabList.length})</a>
             </li>`
 
     }).join('')
@@ -62,12 +62,3 @@ window.addEventListener('hashchange', () => {
 })
 
 render()
-
-
-//Attempted code
-// let active = ''
-// if (hash === tabName) active = 'active'
-// return `
-// <li class="nav-item ${active}">
-//     <a class="nav-link" href="#${tabName}">${tabName} (${tabList.length})</a>
-// </li>`
