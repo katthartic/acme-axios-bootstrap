@@ -9,19 +9,20 @@ let hash = window.location.hash.slice(1)
 
 
 function render() {
-    dataPromise.then(result => {
+    dataPromise.then(data => {
 
-        if (!(hash in result)) {
-            window.location.hash = '#Products' //default hash
+        if (!(hash in data)) { //check if hash is a key in data
+            window.location.hash = '#Products' //default hash to first tab
         }
-        hash = window.location.hash.slice(1)
+        hash = window.location.hash.slice(1) //retrieve hash again (in case it was corrected above)
         
-        renderNav(result, hash)
-        renderTable(result, hash)
+        renderNav(data, hash)
+        renderTable(data, hash)
     })
 }
 
 function renderNav (data, hash) {
+    //render nav tabs using keys from data (ie. Products and Companies)
     let navTabs = Object.entries(data).map(entry => {
         [tabName, tabList] = entry
 
@@ -36,9 +37,9 @@ function renderNav (data, hash) {
 }
 
 function renderTable (data, hash) {
-    let tableData = data[hash]
+    let tableData = data[hash] //use hash to match data to the list of products or companies
 
-    //render table header
+    //render table header using first item in array as a template
     let header = Object.keys(tableData[0]).map(key => {
         return `<th>${key}</th>`
     }).join('')
