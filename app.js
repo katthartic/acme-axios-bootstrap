@@ -5,14 +5,20 @@ const dataPromise = Promise.all([axios.get(`${API}products`), axios.get(`${API}c
         return {Products: responses[0].data, Companies: responses[1].data}
     })
 
-dataPromise.then(result => {
-    window.location.hash = '#Products' //forces starting hash
-    renderNav(result)
-    renderTable(result)
-})
+function render() {
+    let hash = window.location.hash.slice(1)
+    if (hash === '') {
+        window.location.hash = '#Products' //forces starting hash
+    }
+    hash = window.location.hash.slice(1)
+    
+    dataPromise.then(result => {
+        renderNav(result, hash)
+        renderTable(result, hash)
+    })
+}
 
-function renderNav (data) {
-    const hash = window.location.hash.slice(1)
+function renderNav (data, hash) {
     let navTabs = Object.entries(data).map(entry => {
         [tabName, tabList] = entry
         return `
@@ -24,8 +30,7 @@ function renderNav (data) {
     document.querySelector('ul').innerHTML = navTabs
 }
 
-function renderTable (data) {
-    const hash = window.location.hash.slice(1)
+function renderTable (data, hash) {
     let tableData = data[hash]
 
     //render table header
@@ -48,9 +53,7 @@ function renderTable (data) {
 }
 
 window.addEventListener('hashchange', () => {
-    const hash = window.location.hash.slice(1)
-    dataPromise.then(result => {
-        renderNav(result)
-        renderTable(result)
-    })
+    render()
 })
+
+render()
