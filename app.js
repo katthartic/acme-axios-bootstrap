@@ -1,18 +1,15 @@
 const API = 'https://acme-users-api-rev.herokuapp.com/api/'
 
-const dataPromise = Promise.all([axios.get(`${API}companies`), axios.get(`${API}products`)])
+const dataPromise = Promise.all([axios.get(`${API}products`), axios.get(`${API}companies`)])
     .then(responses => {
-        return {Companies: responses[0].data, Products: responses[1].data}
+        return {Products: responses[0].data, Companies: responses[1].data}
     })
 
-
 dataPromise.then(result => {
-    window.location.hash = '#Companies'
+    window.location.hash = '#Products' //forces starting hash
     renderNav(result)
     renderTable(result)
 })
-
-// const hash = window.location.hash.slice(1)
 
 function renderNav (data) {
     const hash = window.location.hash.slice(1)
@@ -31,6 +28,7 @@ function renderTable (data) {
     const hash = window.location.hash.slice(1)
     let tableData = data[hash]
 
+    //render table header
     let header = Object.keys(tableData[0]).map(key => {
         return `<th>${key}</th>`
     }).join('')
@@ -38,6 +36,21 @@ function renderTable (data) {
     header = `<tr>${header}</tr>`
     document.querySelector('thead').innerHTML = header
 
-    console.log(tableData)
+    //render table rows
+    let rows = tableData.map(obj => {
+        const row = Object.values(obj).map(value => {
+            return `<td>${value}</td>`
+        }).join('')
+        return `<tr>${row}</tr>`
+    }).join('')
+
+    document.querySelector('tbody').innerHTML = rows
 }
 
+window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.slice(1)
+    dataPromise.then(result => {
+        renderNav(result)
+        renderTable(result)
+    })
+})
