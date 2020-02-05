@@ -5,14 +5,17 @@ const dataPromise = Promise.all([axios.get(`${API}products`), axios.get(`${API}c
         return {Products: responses[0].data, Companies: responses[1].data}
     })
 
+let hash = window.location.hash.slice(1)
+
+
 function render() {
-    let hash = window.location.hash.slice(1)
-    if (hash === '') {
-        window.location.hash = '#Products' //forces starting hash
-    }
-    hash = window.location.hash.slice(1)
-    
     dataPromise.then(result => {
+        
+        if (!(hash in result)) {
+            window.location.hash = '#Products' //default hash
+        }
+        hash = window.location.hash.slice(1)
+        
         renderNav(result, hash)
         renderTable(result, hash)
     })
@@ -21,10 +24,12 @@ function render() {
 function renderNav (data, hash) {
     let navTabs = Object.entries(data).map(entry => {
         [tabName, tabList] = entry
+
         return `
-        <li class="nav-item ${hash === tabName ? 'active' : ''}">
-            <a class="nav-link" href="#${tabName}">${tabName} (${tabList.length})</a>
-        </li>`
+            <li class="nav-item ${hash === tabName ? 'active' : ''}">
+                <a class="nav-link" href="#${tabName}">${tabName} (${tabList.length})</a>
+            </li>`
+
     }).join('')
 
     document.querySelector('ul').innerHTML = navTabs
@@ -57,3 +62,12 @@ window.addEventListener('hashchange', () => {
 })
 
 render()
+
+
+//Attempted code
+// let active = ''
+// if (hash === tabName) active = 'active'
+// return `
+// <li class="nav-item ${active}">
+//     <a class="nav-link" href="#${tabName}">${tabName} (${tabList.length})</a>
+// </li>`
