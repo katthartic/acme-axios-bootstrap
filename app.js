@@ -35,7 +35,9 @@ function renderTable (data) {
         return `<th>${key}</th>`
     }).join('')
 
-    console.log(header)
-    
+    header = `<tr>${header}</tr>`
+    document.querySelector('thead').innerHTML = header
+
+    console.log(tableData)
 }
 
